@@ -1,0 +1,30 @@
+{
+    "manifest_version": 1,
+    "id": "your-extension-id",  
+    "version": "1.0.0",
+    "name": "Smart Click Maps",
+    "description": "Visualizes where your viewers are clicking on the stream.",
+    "thumbnail_url": "https://yourdomain.com/thumbnail.jpg",
+    "developer": {
+        "name": "Your Name",
+        "contact_email": "youremail@example.com"
+    },
+    "permissions": [],
+    "assets": {
+        "viewer_overlay": {
+            "uri": "https://your-frontend-hosting.com/index.html",
+            "height": 1080,
+            "width": 1920
+        }
+    },
+    "config": {
+        "viewer_overlay": {}
+    },
+    "requests": {
+        "identity_link": {}
+    },
+    "requirements": [],
+    "feature": {
+        "viewer_summary": true
+    }
+}
