@@ -44,6 +44,8 @@ class ClusteringEngine:
             return None
 
         click_variance = float(np.std(self._clicks, axis=0).mean())
+        if click_variance <= 0.0:
+            return np.full(n_points, -1, dtype=np.int32)
         min_cluster_size, min_samples = calculate_adaptive_params(n_points, click_variance)
         clusterer = hdbscan.HDBSCAN(
             min_cluster_size=min_cluster_size,
