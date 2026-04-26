@@ -103,7 +103,7 @@ def cluster_clicks(points: np.ndarray) -> ClusterResult:
             params=(8, 5),
         )
 
-    pts = np.asarray(points, dtype=np.float64)
+    pts = np.asarray(points, dtype=np.float32)
     n = len(pts)
 
     if n < 8:
@@ -137,6 +137,8 @@ def cluster_clicks(points: np.ndarray) -> ClusterResult:
         metric="euclidean",
         cluster_selection_method="eom",
         prediction_data=False,
+        core_dist_n_jobs=-1,
+        algorithm="boruvka_kdtree",
     )
     clusterer.fit(pts)
     labels: np.ndarray = clusterer.labels_.astype(np.int32)

@@ -2,7 +2,7 @@
  * Accumulates incoming clicks between drain cycles.
  * Rate-limits per socket to prevent griefing.
  */
-const RATE_LIMIT_PER_SOCKET = 5; // max clicks accepted per 200ms window per client
+const RATE_LIMIT_PER_SOCKET = 2; // 10 clicks/sec at 200ms ticks
 
 class ClickAggregator {
   constructor() {
@@ -11,6 +11,7 @@ class ClickAggregator {
   }
 
   add({ x, y, socketId }) {
+    if (typeof socketId !== "string" || socketId.length === 0) return;
     const count = this._socketCounts.get(socketId) ?? 0;
     if (count >= RATE_LIMIT_PER_SOCKET) return;
     this._socketCounts.set(socketId, count + 1);
