@@ -104,6 +104,7 @@ def cluster_clicks(points: np.ndarray) -> ClusterResult:
             params=(MIN_POINTS_FOR_CLUSTERING, 5),
         )
 
+    # float32 is sufficient for normalized [0,1] screen coordinates and is faster than float64.
     pts = np.asarray(points, dtype=np.float32)
     n = len(pts)
 
