@@ -6,7 +6,7 @@
   "scripts": {
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "test": "jest --testPathPattern=tests/"
+    "test": "jest --passWithNoTests --testPathPattern=tests/"
   },
   "dependencies": {
     "cors": "^2.8.5",

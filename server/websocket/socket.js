@@ -18,7 +18,7 @@ function initSocket(httpServer) {
 
     socket.on("click", (payload) => {
       if (!isValidClick(payload)) return;
-      aggregator.add(payload);
+      aggregator.add({ x: payload.x, y: payload.y, socketId: socket.id });
     });
 
     socket.on("disconnect", () => {
@@ -39,7 +39,9 @@ function initSocket(httpServer) {
   return io;
 }
 
-function isValidClick({ x, y }) {
+function isValidClick(payload) {
+  if (!payload || typeof payload !== "object") return false;
+  const { x, y } = payload;
   return (
     typeof x === "number" &&
     typeof y === "number" &&

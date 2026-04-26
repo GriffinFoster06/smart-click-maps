@@ -5,6 +5,11 @@ import numpy as np
 from typing import List, Optional
 import hdbscan
 
+from backend.clustering.cluster_engine import (
+    MIN_POINTS_FOR_CLUSTERING,
+    calculate_adaptive_params,
+)
+
 
 class ClusteringEngine:
     """Maintains rolling click window and produces cluster assignments."""
@@ -34,12 +39,22 @@ class ClusteringEngine:
 
     def cluster(self) -> Optional[np.ndarray]:
         """Return label array or None if too few points."""
-        if len(self._clicks) < self.min_cluster_size:
+        n_points = len(self._clicks)
+        if n_points < MIN_POINTS_FOR_CLUSTERING:
             return None
+
+        click_variance = float(np.std(self._clicks, axis=0).mean())
+        if click_variance <= 0.0:
+            return np.full(n_points, -1, dtype=np.int32)
+        min_cluster_size, min_samples = calculate_adaptive_params(n_points, click_variance)
         clusterer = hdbscan.HDBSCAN(
-            min_cluster_size=self.min_cluster_size,
-            min_samples=self.min_samples,
+            min_cluster_size=min_cluster_size,
+            min_samples=min_samples,
+            metric="euclidean",
             cluster_selection_method="eom",
+            prediction_data=False,
+            core_dist_n_jobs=-1,
+            algorithm="boruvka_kdtree",
         )
         labels = clusterer.fit_predict(self._clicks)
         return labels

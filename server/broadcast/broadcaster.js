@@ -2,6 +2,8 @@ const { execFile } = require("child_process");
 const path = require("path");
 
 const PYTHON_SCRIPT = path.resolve(__dirname, "../../backend/cluster_worker.py");
+const REPO_ROOT = path.resolve(__dirname, "../..");
+const CLUSTERING_TIMEOUT_MS = 180; // keep below the 200ms drain interval to avoid overlapping clustering runs
 
 class HotspotBroadcaster {
   constructor(io) {
@@ -17,7 +19,7 @@ class HotspotBroadcaster {
       const child = execFile(
         "python3",
         [PYTHON_SCRIPT],
-        { timeout: 180 },
+        { timeout: CLUSTERING_TIMEOUT_MS, cwd: REPO_ROOT },
         (err, stdout, stderr) => {
           if (err) {
             console.error("[broadcaster] python error:", stderr);
