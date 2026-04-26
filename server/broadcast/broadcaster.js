@@ -18,7 +18,7 @@ class HotspotBroadcaster {
       const child = execFile(
         "python3",
         [PYTHON_SCRIPT],
-        { timeout: 400, cwd: REPO_ROOT },
+        { timeout: 280, cwd: REPO_ROOT },
         (err, stdout, stderr) => {
           if (err) {
             console.error("[broadcaster] python error:", stderr);

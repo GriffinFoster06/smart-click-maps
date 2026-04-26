@@ -5,7 +5,10 @@ import numpy as np
 from typing import List, Optional
 import hdbscan
 
-from backend.clustering.cluster_engine import calculate_adaptive_params
+from backend.clustering.cluster_engine import (
+    MIN_POINTS_FOR_CLUSTERING,
+    calculate_adaptive_params,
+)
 
 
 class ClusteringEngine:
@@ -37,7 +40,7 @@ class ClusteringEngine:
     def cluster(self) -> Optional[np.ndarray]:
         """Return label array or None if too few points."""
         n_points = len(self._clicks)
-        if n_points < 8:
+        if n_points < MIN_POINTS_FOR_CLUSTERING:
             return None
 
         click_variance = float(np.std(self._clicks, axis=0).mean())

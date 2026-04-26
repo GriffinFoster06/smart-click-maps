@@ -18,6 +18,7 @@ from scipy.spatial import ConvexHull, QhullError
 VARIANCE_THRESHOLD: float = 0.05
 
 MAX_CLUSTERS: int = 5  # return at most this many hotspots, ranked by size
+MIN_POINTS_FOR_CLUSTERING: int = 8
 
 _EMPTY_F64 = np.empty(0, dtype=np.float64)
 _EMPTY_I32 = np.empty(0, dtype=np.int32)
@@ -100,20 +101,20 @@ def cluster_clicks(points: np.ndarray) -> ClusterResult:
             probabilities=_EMPTY_F64.copy(),
             clusters=[],
             n_points=0,
-            params=(8, 5),
+            params=(MIN_POINTS_FOR_CLUSTERING, 5),
         )
 
     pts = np.asarray(points, dtype=np.float32)
     n = len(pts)
 
-    if n < 8:
+    if n < MIN_POINTS_FOR_CLUSTERING:
         # Below the minimum possible min_cluster_size — no cluster can form
         return ClusterResult(
             labels=np.full(n, -1, dtype=np.int32),
             probabilities=np.zeros(n, dtype=np.float64),
             clusters=[],
             n_points=n,
-            params=(8, 5),
+            params=(MIN_POINTS_FOR_CLUSTERING, 5),
         )
 
     variance = float(np.std(pts, axis=0).mean())
