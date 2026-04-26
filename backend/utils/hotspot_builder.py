@@ -5,7 +5,8 @@ import numpy as np
 from typing import List, Optional
 from shapely.geometry import Polygon, mapping
 
-from backend.geometry.alpha_shapes import generate_alpha_shape, smooth_polygon
+from backend.geometry.alpha_shapes import generate_alpha_shape
+from backend.geometry.spline_smooth import adaptive_smoothing
 
 
 MAX_HOTSPOTS = 5
@@ -30,7 +31,7 @@ def build_hotspots(points: np.ndarray, labels: np.ndarray) -> List[dict]:
         centroid = pts.mean(axis=0).tolist()
         polygon = generate_alpha_shape(pts)
         if polygon is not None:
-            polygon = smooth_polygon(polygon)
+            polygon = adaptive_smoothing(polygon, cluster_size=len(pts))
         intensity = round(100 * len(pts) / total_pts, 1)
         hotspots.append({
             "id": int(label),

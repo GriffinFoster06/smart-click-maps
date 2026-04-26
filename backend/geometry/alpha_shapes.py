@@ -5,7 +5,6 @@ from collections import defaultdict
 from typing import Optional
 
 import numpy as np
-from scipy.interpolate import splev, splprep
 from scipy.spatial import ConvexHull, Delaunay
 from shapely.geometry import MultiPolygon, Polygon
 from shapely.ops import polygonize, unary_union
@@ -113,18 +112,3 @@ def extract_boundary(
         current = nxt
 
     return points[boundary]
-
-
-def smooth_polygon(polygon: Polygon, n_points: int = 200) -> Polygon:
-    """Apply cubic spline smoothing to polygon exterior ring."""
-    if polygon is None or polygon.is_empty:
-        return polygon
-    x, y = polygon.exterior.xy
-    x, y = np.array(x), np.array(y)
-    try:
-        tck, _ = splprep([x, y], s=0, per=True, k=3)
-        u = np.linspace(0, 1, n_points)
-        sx, sy = splev(u, tck)
-        return Polygon(zip(sx, sy))
-    except Exception:
-        return polygon
